@@ -6,10 +6,10 @@ Here's a table showing the improvements I did to make the application go faster.
 
 | Version | Time | Speedup | Changes |
 | :-----: | ---- | :-----: | ------- |
-| 01 | 12m 45s | &mdash; | Initial version - no changes |
-| 02 | 1m 45s | 5.67x | Dynamic scheduling with incorrect number of data items per processing chunk |
-| 03 | 1m 10s | 1.01x | Dynamic scheduling with correct number of data items per processing chunk |
-| [04](lychrel.cpp) | 44.889s | 1.01x | Version 03 with line reversing the vector removed and additional thread safety implementations |
+| 01 | 10m 46s | &mdash; | Initial version - no changes |
+| 02 | 1m 45s | 6.15x | Dynamic scheduling with incorrect number of data items per processing chunk |
+| 03 | 1m 10s | 9.23x | Dynamic scheduling with correct number of data items per processing chunk |
+| [04](lychrel.cpp) | 44.889s | 14.41x | Version 03 with line reversing the vector removed and additional thread safety implementations |
 
 
 ## Comments

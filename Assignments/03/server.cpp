@@ -1,4 +1,4 @@
-
+#include <thread>
 #include <iostream>
 
 // These are custom classes that encode the web transactions.  They're
@@ -20,7 +20,7 @@
 //
 //  (Don't use any of them.  Generally, above 9000 is usually pretty clear)
 //
-const uint16_t DefaultPort = 8142; // Update this variable with your assigned port value
+const uint16_t DefaultPort = 8120; // Update this variable with your assigned port value
 
 int main(int argc, char* argv[]) {
     uint16_t port = argc > 1 ? std::stol(argv[1]) : DefaultPort;
@@ -58,50 +58,16 @@ int main(int argc, char* argv[]) {
         std::string msg;
         session >> msg;
 
-        // If you want to see the raw "protocol", uncomment the
-        //   following line:
-        //
-        // std::cout << msg;
-
         // However, if our msg has requests in it, we send it to a
         //   request parser, HTTPRequest.  The resulting request
         //   contains the type of request, the filename, and other
         //   information.
-        HTTPRequest request(msg);
-
-        //  If you want to see the parsed message, just uncomment the
-        //    following line:
-        //
-        // std::cout << request << "\n";
-
-        //  if you want to see the parsed options, uncomment the
-        //    following line
-        //
-        // std::cout << request.options() << "\n";
-
-        // We create a response to the request, which we encode in
-        //   an HTTPResponse object.  It prepares the appropriate
-        //   HTTP header, and then includes all of the relevant
-        //   data that's to be sent back to the web browser.
-        //
-        // Web servers have a concept of a "root" directory (similar to
-        //   a filesystem), which is the top-level of where all of the
-        //   files the server is able to send is located.  We include
-        //   that path here, so we're all looking at the same files.
-        const char* root = "/home/faculty/shreiner/public_html/03";
-        HTTPResponse response(request, root);
-
-        //  Again, if you want to see the contents of the response
-        //    (specifically, the header, which is human readable, but
-        //    not the returned data), you can just print this to
-        //    std::cout as well.
-        //
-        // std::cout << response << "\n";
-
-        // Most importantly, send the response back to the web client.
-        //
-        // We keep using the same session until we get an empty
-        //   message, which indicates this session is over.
-        session << response;
+	std::thread{[&]() {
+            HTTPRequest request(msg);
+            const char *root = "/home/faculty/shreiner/public_html/03";
+            HTTPResponse response(request, root);
+            session << response;
+        }}.detach();
     }
 }
+

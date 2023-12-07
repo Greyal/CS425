@@ -5,7 +5,7 @@
 Here's a table showing the improvements I did to make the application go faster.  The **Time** column in the table represents the time taken to load the page as clocked in Opera.
 
 | Version | Time | Speedup | Changes |
-| :-----: | ---- | :-----: | :------: | ------- |
+| :-----: | ---- | :-----: | ------- |
 | 01 | 78.8ss | &mdash; | Initial version - no changes |
 | [02](server.cpp) | 52.6ss | 1.5x | Basic multithreading implemented |
 

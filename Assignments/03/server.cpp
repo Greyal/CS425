@@ -1,5 +1,6 @@
 #include <thread>
 #include <iostream>
+#include <mutex>
 
 // These are custom classes that encode the web transactions.  They're
 //   actually quite simple (mostly because we're solving a very limited)
@@ -41,33 +42,36 @@ int main(int argc, char* argv[]) {
     //   request.  When the request is made, our connection "accepts"
     //   the connection, and starts a session.
     while (connection) {
-
-        // A session is composed of a bunch of requests (from the "client",
-        //   like a web browser), and responses from us, the web "server".
-        //   Each request is merely an ASCII string (with some special
-        //   characters specially encoded.  We don't implement all that
-        //   fancy stuff here.  We're keeping it simple).
-        Session session(connection.accept());
-
-        // A message received from the client will be a string like
-        //
-        //      GET <filename> HTTP/1.1 [plus a bunch of optional stuff]
-        //
-        //    Here, we merely read that string from the socket into
-        //    a string.
-        std::string msg;
-        session >> msg;
-
         // However, if our msg has requests in it, we send it to a
         //   request parser, HTTPRequest.  The resulting request
         //   contains the type of request, the filename, and other
         //   information.
-	std::thread{[&]() {
-            HTTPRequest request(msg);
-            const char *root = "/home/faculty/shreiner/public_html/03";
-            HTTPResponse response(request, root);
-            session << response;
-        }}.detach();
+        //if (numThreads < 10) {
+	int client = connection.accept();
+            std::thread{[client]() {
+                //int client = connection.accept();
+                // A session is composed of a bunch of requests (from the "client",
+                //   like a web browser), and responses from us, the web "server".
+                //   Each request is merely an ASCII string (with some special
+                //   characters specially encoded.  We don't implement all that
+                //   fancy stuff here.  We're keeping it simple).
+                Session session(client);
+
+                // A message received from the client will be a string like
+                //
+                //      GET <filename> HTTP/1.1 [plus a bunch of optional stuff]
+                //
+                //    Here, we merely read that string from the socket into
+                //    a string.
+                std::string msg;
+                session >> msg;
+
+                HTTPRequest request(msg);
+                const char *root = "/home/faculty/shreiner/public_html/03";
+                HTTPResponse response(request, root);
+                session << response;
+            }}.detach();
+        //}
     }
 }
 
